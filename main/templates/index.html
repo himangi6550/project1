@@ -1,0 +1,104 @@
+{% load static %}
+{% block content %}
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>View List</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+        <link rel="stylesheet" href="{% static 'style.css' %}">
+    </head>
+    <body>
+      <div class="fl_left">
+        <ul class="nospace">
+          {% if user.is_authenticated %}
+          <li>Hello, {{user.first_name}} </li>
+          <li><a href="accounts/logout">Logout</a></li>
+          {% else %}
+          <li><a href="accounts/login">Login</a></li>
+          <li><a href="{% url 'register' %}">Register</a></li>
+          {% endif %}
+        </ul>
+      </div>
+        <div class="container mt-5">
+            <!-- top -->
+            <div class="row">
+                <div class="col-lg-6">
+                    <h1>View Grocery List</h1>
+                </div>
+                <div class="col-lg-6 float-right">
+                    <div class="row">
+                        <div class="col-lg-9">
+                          <form method="POST">
+                            {% csrf_token %}
+                            <!-- Date Filtering-->
+                            <div class="row">
+                              <div class="col-lg-8">
+
+                            <input id="filterdate" type="date" class="form-control" name="filterdate" value="{{filterdate|date:'d/m/Y'}}" required>
+                          </div>
+                            <div class="col-lg-2">
+                              <button type="submit" class="btn btn-danger">Filter</button>
+                            </div>
+                            </div>
+                          </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="container">
+                  <div class="col-lg-5">
+                    <li><a href="{% url 'add' %}">ADD ITEMS</a></li>
+
+                  </div>
+                </div>
+            </div>
+            <!-- // top -->
+            <!-- Grocery Cards -->
+            <div class="row mt-4">
+                <!--- -->
+                <!-- Loop This -->
+                {% if obj %}
+                {% for i in obj %}
+
+                <div class="col-lg-4">
+                    <div class="card">
+                        <div class="card-body">
+                          <!-- <h6 class="card-subtitle mb-2 text-muted">{{i.id}}</h6> -->
+                          <h5 class="card-title">{{i.itemname}}</h5>
+                          <h6 class="card-subtitle mb-2 text-muted">{{i.itemquantity}}</h6>
+                          <p class="text-success">{{i.itemstatus}}</p>
+                          <a href="{% url 'update' i.id %}">Update Item</a><br>
+                          <a href="{% url 'delete' i.id %}">Delete Item</a><br>
+                        </div>
+                      </div>
+                </div>
+
+                {% endfor %}
+                {% else %}
+                <h3>Nothing here</h3>
+                {% endif %}
+                <!-- // Loop -->
+                <!-- <div class="col-lg-4">
+                    <div class="card">
+                        <div class="card-body">
+                          <h5 class="card-title">Chicken</h5>
+                          <h6 class="card-subtitle mb-2 text-muted">2Kgs</h6>
+                          <p class="text-danger">NOT AVAILABLE</p>
+                        </div>
+                      </div>
+                </div>
+
+                <div class="col-lg-4">
+                    <div class="card">
+                        <div class="card-body">
+                          <h5 class="card-title">Posto</h5>
+                          <h6 class="card-subtitle mb-2 text-muted">50gms</h6>
+                          <p class="text-info">PENDING</p>
+                        </div>
+                      </div>
+                </div> -->
+
+            </div>
+        </div>
+    </body>
+</html>
+{% endblock %}
